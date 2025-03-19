@@ -12,15 +12,27 @@
             font-size: 1.2em;
             margin-top: 20px;
         }
+
+        table{
+            width: 10%; /* Ajuste a porcentagem conforme necessário */
+            margin: auto; /* Centraliza a tabela */
+        }
+        .inicio{
+            margin-left: 130px;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
+    <div class="inicio">
+        <button type="button" class="btn btn-primary" onclick="inicio()">Inicio</button>
+    </div>
     <div class="container">
-        <h1>Lista de Vendas</h1>
+        <h1>Histórico de Vendas</h1>
 
         <div class="form-group">
             <table class="table table-bordered">
-                <thead>
+                <thead class="thead-dark"
                     <tr>
                         <th>Venda ID</th>
                         <th>Nome do Cliente</th>
@@ -36,16 +48,29 @@
                     <!-- As vendas serão inseridas aqui -->
                 </tbody>
             </table>
+            
+            <!-- Navegação -->
+            <div class="d-flex justify-content-between">
+                <button id="prevButton" class="btn btn-secondary" onclick="changePage('prev')">Anterior</button>
+                <button id="nextButton" class="btn btn-secondary" onclick="changePage('next')">Próximo</button>
+            </div>
+            
             <div class="loading" id="loading">Carregando...</div>
         </div>
-        <button type="button" class="btn btn-primary" onclick="inicio()">Início</button>
+
+        
     </div>
 
     <script>
+        let currentPage = 1;
+        const itemsPerPage = 7;
+        let allVendas = []; // Guarda todas as vendas
+
         function inicio() {
             window.location.href = 'index.html'; 
         }
 
+        // Função para carregar as vendas do servidor
         async function carregarVendas() {
             const tableBody = document.getElementById('tableShowVendas');
             const loading = document.getElementById('loading');
@@ -59,33 +84,10 @@
                 const data = await response.json();
                 console.log('Vendas encontradas:', data);
 
-                tableBody.innerHTML = '';
+                allVendas = data; // Armazena todas as vendas
 
-                if (data.length === 0) {
-                    const row = document.createElement('tr');
-                    row.innerHTML = '<td colspan="9" class="text-center">Nenhuma venda encontrada</td>';
-                    tableBody.appendChild(row);
-                    return;
-                }
-
-                data.forEach(venda => {
-                    const valorTotal = Number(venda.Valor_Total);
-                    const lucroProduto = Number(venda.Lucro_Produto);
-                    const taxaEntrega = Number(venda.Taxa_Entrega);
-                    
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${venda.Venda_ID}</td>
-                        <td>${venda.Nome_cliente}</td>
-                        <td>${new Date(venda.Data_Venda).toLocaleDateString()}</td>
-                        <td>${valorTotal.toFixed(2)}</td>
-                        <td>${lucroProduto.toFixed(2)}</td>
-                        <td>${venda.Metodo_Pagamento}</td>
-                        <td>${taxaEntrega.toFixed(2)}</td>
-                        <td>${venda.Tipo_Cliente}</td>
-                    `;
-                    tableBody.appendChild(row);
-                });
+                // Carrega a página atual
+                loadPage(currentPage);
             } catch (error) {
                 loading.style.display = 'none';
                 console.error('Erro na requisição:', error.message);
@@ -93,6 +95,55 @@
             }
         }
 
+        // Função para carregar uma página específica
+        function loadPage(page) {
+            const tableBody = document.getElementById('tableShowVendas');
+            tableBody.innerHTML = '';
+
+            const startIndex = (page - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const pageVendas = allVendas.slice(startIndex, endIndex);
+
+            if (pageVendas.length === 0 && page !== 1) {
+                return; // Se não houver dados para a página solicitada, não fazer nada
+            }
+
+            // Adiciona cada venda na tabela
+            pageVendas.forEach(venda => {
+                const valorTotal = Number(venda.Valor_Total);
+                const lucroProduto = Number(venda.Lucro_Produto);
+                const taxaEntrega = Number(venda.Taxa_Entrega);
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${venda.Venda_ID}</td>
+                    <td>${venda.Nome_cliente}</td>
+                    <td>${new Date(venda.Data_Venda).toLocaleDateString()}</td>
+                    <td>${valorTotal.toFixed(2)}</td>
+                    <td>${lucroProduto.toFixed(2)}</td>
+                    <td>${venda.Metodo_Pagamento}</td>
+                    <td>${taxaEntrega.toFixed(2)}</td>
+                    <td>${venda.Tipo_Cliente}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+
+            // Atualiza os botões de navegação
+            document.getElementById('prevButton').disabled = currentPage === 1;
+            document.getElementById('nextButton').disabled = currentPage * itemsPerPage >= allVendas.length;
+        }
+
+        // Função para mudar de página (anterior ou próxima)
+        function changePage(direction) {
+            if (direction === 'next') {
+                currentPage++;
+            } else if (direction === 'prev') {
+                currentPage--;
+            }
+            loadPage(currentPage);
+        }
+
+        // Chama a função para carregar as vendas ao carregar a página
         document.addEventListener('DOMContentLoaded', carregarVendas);
     </script>
 </body>

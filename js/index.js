@@ -46,13 +46,33 @@ app.post('/adicionar-produto', async (req, res) => {
   }
 
   try {
+    // Log para ver os dados recebidos
+    console.log('Dados recebidos para adicionar produto:', req.body);
+
+    // Verifica se o produto já existe no banco de dados
+    const produtoExistente = await knex('estoque')
+      .select('*')
+      .where('nome_produto', nome_produto)
+      .first(); // Pega apenas um registro
+
+    // Log para ver o que foi encontrado na consulta
+    console.log('Produto encontrado no banco:', produtoExistente);
+
+    if (produtoExistente) {
+      return res.status(400).json({ error: 'Produto já cadastrado no sistema' });
+    }
+
+    // Se o produto não existir, adiciona no banco
     await adicionarProduto(nome_produto, quantidade_total, preco, custo);
+    
     res.status(201).json({ message: 'Produto adicionado com sucesso' });
   } catch (error) {
     console.error('Erro ao adicionar produto:', error.message);
     res.status(500).json({ error: 'Erro ao adicionar produto' });
   }
 });
+
+
 
 // Função para buscar um produto no banco de dados
 async function buscarProduto(nome_produto) {
@@ -118,6 +138,7 @@ async function adicionarVenda(nome_cliente, telefone, valor_total, metodo_pagame
     const [vendaId] = await trx('Venda').insert({
       Cliente_ID: cliente_id,
       Data_Venda: data_venda,
+      Telefone: telefone,
       Valor_Total: valor_total,
       Lucro_Produto: lucro_produto,
       Metodo_Pagamento: metodo_pagamento,

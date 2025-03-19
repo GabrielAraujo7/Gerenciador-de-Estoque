@@ -86,7 +86,6 @@
             
                 const data = await response.json();
                 console.log('Produtos encontrados:', data); // Verifica se os dados foram recebidos corretamente
-                console.log('Será?',data);
             
                 if (data.length === 0) {
                     alert('Nenhum produto encontrado');
@@ -98,15 +97,18 @@
             
                 data.forEach(produto => {
                     console.log('Produto:', produto); // Verifica cada produto antes de inserir na tabela
-            
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${produto.Nome_Produto}</td>
-                        <td>${produto.Quantidade_Total}</td>
-                        <td>${produto.Preco}</td>
-                        <td>${produto.Custo}</td>
-                    `;
-                    tableBody.appendChild(row);
+                    
+                    if(produto.Quantidade_Total > 0){
+                    
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${produto.Nome_Produto}</td>
+                            <td>${produto.Quantidade_Total}</td>
+                            <td>${produto.Preco}</td>
+                            <td>${produto.Custo}</td>
+                        `;
+                        tableBody.appendChild(row);
+                    }
                 });
 
             } catch (error) {
@@ -114,6 +116,10 @@
                 alert('Erro ao buscar produto');
             }
         });
+
+
+
+        
     </script>
 </body>
 </html>

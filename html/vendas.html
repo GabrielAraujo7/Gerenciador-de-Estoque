@@ -38,7 +38,6 @@
 
         <!-- Buscar Produto -->
         <div id="buscarProdutoContainer">
-            <h2>Buscar Produto</h2>
             <form id="formularioBusca">
                 <div class="form-group">
                     <input type="text" class="form-control" id="nome_produto" placeholder="Digite o nome do produto" required>
@@ -49,7 +48,7 @@
             <div id="loading" class="loading">Carregando...</div>
             <div id="errorBusca" class="error"></div>
             <table class="table table-bordered mt-1">
-                <thead>
+                <thead class="thead-dark">
                     <tr>
                         <th>Nome do Produto</th>
                         <th>Preço</th>
@@ -65,31 +64,29 @@
 
         <!-- Registrar Venda -->
         <div id="vendaFormContainer" style="display: none;">
-            <h2>Registrar Venda</h2>
+            <h2>Dados da Venda</h2>
             <form id="formularioVenda">
                 <div class="form-row">
-                    <div class="form-group col-md-4">
-                        <input type="hidden" id="cliente_id" name="cliente_id" value="1">
-                        <label for="nome_cliente">Nome do Cliente</label>
-                        <input type="text" class="form-control" id="nome_cliente" required>
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label for="telefone">Telefone do Cliente</label>
-                        <input type="tel" class="form-control" id="telefone" placeholder="Digite o telefone do cliente" required>
-                    </div>
+                        <div class="form-group col-md-3">
+                            <input type="hidden" id="cliente_id" name="cliente_id" value="1">
+                            <label for="nome_cliente">Nome do Cliente</label>
+                            <input type="text" class="form-control" id="nome_cliente" placeholder="Digite o nome do cliente" required>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="telefone">Telefone do Cliente</label>
+                            <input type="tel" class="form-control" id="telefone" placeholder="Digite o telefone do cliente" required>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="rua">Rua</label>
+                            <input type="text" class="form-control" id="rua" placeholder="Digite a rua" required>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="numero_da_casa">Número da casa</label>
+                            <input type="text" class="form-control" id="numero" placeholder="Digite o número da casa" required>
+                        </div>
                 </div>
                 <div class="form-row">
-                    <div class="form-group col-md-4">
-                        <label for="rua">Rua</label>
-                        <input type="text" class="form-control" id="rua" placeholder="Digite a rua" required>
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label for="numero">Número</label>
-                        <input type="text" class="form-control" id="numero" placeholder="Digite o número" required>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-md-3">
                         <label for="tipo_cliente">Tipo de Cliente</label>
                         <select class="form-control" id="tipo_cliente" required>
                             <option value="olx">OLX</option>
@@ -101,9 +98,9 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="nome_produto_selecionado">Produtos Selecionados</label>
+                    <h2>Dados do Produto</h2>
                     <table class="table table-bordered">
-                        <thead>
+                        <thead class="thead-dark">
                             <tr>
 
                                 <th>Nome do Produto</th>
@@ -118,18 +115,16 @@
                     </table>
                 </div>
                 <div class="form-row">
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-md-3">
                         <label for="metodo_pagamento">Método de Pagamento</label>
                         <select class="form-control" id="metodo_pagamento" required>
                             <option value="Cartão">Cartão</option>
                             <option value="Pix">Pix</option>
                             <option value="Dinheiro">Dinheiro</option>
                             <option value="Pendente">Pendente</option>
-                            <option value="Link">Link Sumap c/ juros até 12x</option>
-                            <option value="Pix">Link Sumap Pix </option>
                         </select>
                     </div>
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-md-3">
                         <label for="tipo_entrega">Tipo de Entrega</label>
                         <select class="form-control" id="tipo_entrega" required>
                             <option value="Pop">Pop</option>
@@ -141,23 +136,31 @@
                             <option value="retiou_trabalho">Retirou no trabalho</option>
                         </select>
                     </div>
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-md-3">
                         <label for="taxa_entrega">Taxa de Entrega</label>
                         <input type="number" class="form-control" id="taxa_entrega" step="0.01" required>
                     </div>
-                    <div class="form-group col-md-4">
-                        <label for="observacao">Observação</label>
-                        <input type="text" class="form-control" id="observacao" required>
+                    <div class="form-group col-md-3">
+                        <label for="taxa_cobrada">Taxa Cobrada</label>
+                        <input type="number" class="form-control" id="taxa_cobrada" step="0.01" required>
                     </div>
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-md-3">
+                        <label for="observacao">Observação</label>
+                        <input type="text" class="form-control" id="observacao">
+                    </div>
+                    <div class="form-group col-md-3">
                         <label for="valor_total">Valor Total</label>
                         <input type="number" class="form-control" id="valor_total" step="0.01" readonly>
                     </div>
+                    <div class="form-group col-md-3">
+                        <label for="lucro_total">Lucro Total</label>
+                        <input type="number" class="form-control" id="lucro_total" step="0.01" readonly>
+                    </div>
                 </div>
-                <button type="submit" class="btn btn-success">Registrar Venda</button>
                 <div class="alert alert-success feedback" id="successMessage" role="alert" aria-live="assertive">
                     Venda adicionada com sucesso!
                 </div>
+                <button type="submit" class="btn btn-success">Registrar Venda</button>
             </form>
         </div>
 
@@ -190,20 +193,21 @@
                     }
                     data.forEach(produto => {
                         const row = document.createElement('tr');
-                        const botaoDesativado = produto.Quantidade_Total <= 0 ? 'disabled' : '';
+                        if (produto.Quantidade_Total > 0) { // Só adiciona se a quantidade for maior que zero
+                            const row = document.createElement('tr');
                     
-                        row.innerHTML = `
-                            <td>${produto.Produto_ID}</td>
-                            <td>${produto.Nome_Produto}</td>
-                            <td>${produto.Preco}</td>
-                            <td>${produto.Quantidade_Total}</td>
-                            <td>
-                                <button class="btn btn-secondary" ${botaoDesativado} onclick='selecionarProduto(${JSON.stringify(produto)})'>
-                                    Selecionar
-                                </button>
-                            </td>
-                        `;
-                        tableBody.appendChild(row);
+                            row.innerHTML = `
+                                <td>${produto.Nome_Produto}</td>
+                                <td>${produto.Preco}</td>
+                                <td>${produto.Quantidade_Total}</td>
+                                <td>
+                                    <button class="btn btn-secondary" onclick='selecionarProduto(${JSON.stringify(produto)})'>
+                                        Selecionar
+                                    </button>
+                                </td>
+                            `;
+                            tableBody.appendChild(row);
+                        }
                     });
                 } catch (error) {
                     console.error('Erro na requisição:', error);
@@ -215,11 +219,28 @@
 
             // Selecionar Produto
             function selecionarProduto(produto) {
+                    // Verifica se o produto já está na lista de produtos selecionados
+            const produtoExistente = produtosSelecionados.find(p => p.Nome_Produto === produto.Nome_Produto);
+
+            if (produtoExistente) {
+                // Se o produto já está na lista, apenas aumenta a quantidade
+                produtoExistente.quantidadeSelecionada++;
+            } else {
+                // Se não está na lista, adiciona o produto com quantidade inicial 1
                 produto.quantidadeSelecionada = 1;
                 produto.Nome_Produto = produto.Nome_Produto || 'Produto Desconhecido';
                 produto.Custo = produto.Custo || 0;
-        
+
                 produtosSelecionados.push(produto);
+                
+                // Desativa o botão de seleção
+                const botoes = document.querySelectorAll('button');
+                botoes.forEach(botao => {
+                    if (botao.textContent.includes('Selecionar') && botao.getAttribute('onclick').includes(produto.Nome_Produto)) {
+                        botao.disabled = true;
+                    }
+                });
+            }
                 atualizarProdutosSelecionados();
                 document.getElementById('vendaFormContainer').style.display = 'block';
             }
@@ -238,12 +259,14 @@
                     tableBody.appendChild(row);
                 });
                 calcularValorTotal();
+                calcularLucro();
             }
 
             function atualizarQuantidade(index, quantidade) {
                 if (quantidade < 1) quantidade = 1;
                 produtosSelecionados[index].quantidadeSelecionada = quantidade;
                 calcularValorTotal();
+                calcularLucro();
             }
 
             function removerProduto(index) {
@@ -256,6 +279,21 @@
                     return acc + (produto.Preco * produto.quantidadeSelecionada);
                 }, 0);
                 document.getElementById('valor_total').value = total.toFixed(2);
+
+            }
+
+            function calcularLucro() {
+                let lucroTotal = 0;
+            
+                produtosSelecionados.forEach(produto => {
+                    const custoUnitario = produto.Custo / produto.Quantidade_Total; // Custo unitário
+                    const lucroPorUnidade = produto.Preco - custoUnitario; // Lucro por unidade
+                    const lucroProduto = lucroPorUnidade * produto.quantidadeSelecionada; // Lucro total do produto
+                    lucroTotal += lucroProduto;
+                });
+                document.getElementById('lucro_total').value = lucroTotal.toFixed(2);
+            
+                console.log("Lucro Total da Venda: R$", lucroTotal.toFixed(2));
             }
 
             // Registrar Venda
@@ -267,7 +305,7 @@
                     nome_cliente: document.getElementById('nome_cliente').value,
                     telefone: document.getElementById('telefone').value,
                     rua: document.getElementById('rua').value,
-                    numero: document.getElementById('numero').value,
+                    numero_da_casa: document.getElementById('numero_da_casa').value,
                     tipo_cliente: document.getElementById('tipo_cliente').value,
                     produtos: produtosSelecionados,
                     metodo_pagamento: document.getElementById('metodo_pagamento').value,

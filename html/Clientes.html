@@ -3,74 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Vendas</title>
+    <title>Lista de Clientes</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .inicio{
+            margin-left: 130px;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
+    <div class="inicio">
+        <button type="button" class="btn btn-primary" onclick="inicio()">Início</button>
+    </div>
+    
     <div class="container">
-        <h1>Lista de Vendas</h1>
+        <h1>Lista de Clientes</h1>
 
         <div class="form-group">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Cliente_ID</th>
-                        <th>Nome do Cliente</th>
-                        <th>Telefone</th>
-                        <th>Tipo do Cliente</th>
-                    </tr>
-                </thead>
-                <tbody id="tableShowVendas">
-                    <!-- As vendas serão inseridas aqui -->
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Cliente_ID</th>
+                            <th>Nome do Cliente</th>
+                            <th>Telefone</th>
+                            <th>Tipo do Cliente</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableShowClientes">
+                        <!-- Os clientes serão inseridos aqui -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Navegação -->
+            <div class="d-flex justify-content-between">
+                <button id="prevButton" class="btn btn-secondary" onclick="changePage('prev')">Anterior</button>
+                <button id="nextButton" class="btn btn-secondary" onclick="changePage('next')">Próximo</button>
+            </div>
+            <div class="loading" id="loading">Carregando...</div>
         </div>
-        <button type="button" class="btn btn-primary" onclick="inicio()">Inicio</button>
     </div>
 
     <script>
+        let currentPage = 1;
+        const itemsPerPage = 7; // Número de clientes por página
+        let allClientes = []; // Array para armazenar todos os clientes
 
         function inicio(){
             window.location.href = 'index.html'; 
         }
-        // Função para carregar as vendas do servidor
-        async function carregarVendas() {
-            const tableBody = document.getElementById('tableShowVendas');
+
+        // Função para carregar os clientes do servidor
+        async function carregarClientes() {
+            const tableBody = document.getElementById('tableShowClientes');
+            const loading = document.getElementById('loading');
+            loading.style.display = 'block'; // Exibe o carregando
 
             try {
                 const response = await fetch('http://localhost:5051/buscar-vendas');
+                loading.style.display = 'none'; // Oculta o carregando
+
                 if (!response.ok) {
-                    throw new Error('Erro ao buscar vendas');
+                    throw new Error('Erro ao buscar clientes');
                 }
- 
+
                 const data = await response.json();
-                console.log('Vendas encontradas:', data);
+                console.log('Clientes encontrados:', data);
 
-                // Limpa o corpo da tabela antes de adicionar novas linhas
-                tableBody.innerHTML = '';
+                allClientes = data; // Armazena todos os clientes
 
-                // Adiciona cada venda como uma nova linha na tabela
-                data.forEach(venda => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${venda.Venda_ID}</td>
-                        <td>${venda.Nome_cliente}</td>
-                        <td>${venda.Telefone}</td>
-                        <td>${venda.Tipo_Cliente}</td>
-                    `;
-                    tableBody.appendChild(row);
-                });
-
+                loadPage(currentPage); // Carrega a página atual
             } catch (error) {
                 console.error('Erro na requisição:', error.message);
-                alert('Erro ao buscar vendas');
+                alert('Erro ao buscar clientes');
             }
         }
 
-        // Chama a função para carregar as vendas ao carregar a página
-        document.addEventListener('DOMContentLoaded', () => {
-            carregarVendas();
-        });
+        // Função para carregar uma página específica
+        function loadPage(page) {
+            const tableBody = document.getElementById('tableShowClientes');
+            tableBody.innerHTML = ''; // Limpa o conteúdo da tabela
+
+            const startIndex = (page - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const pageClientes = allClientes.slice(startIndex, endIndex);
+
+            // Verifica se há dados na página
+            if (pageClientes.length === 0 && page !== 1) {
+                return; // Se não houver dados, não faz nada
+            }
+
+            // Adiciona cada cliente à tabela
+            pageClientes.forEach(venda => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${venda.Venda_ID}</td>
+                    <td>${venda.Nome_cliente}</td>
+                    <td>${venda.Telefone}</td>
+                    <td>${venda.Tipo_Cliente}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+
+            // Atualiza a navegação
+            document.getElementById('prevButton').disabled = currentPage === 1;
+            document.getElementById('nextButton').disabled = currentPage * itemsPerPage >= allClientes.length;
+        }
+
+        // Função para navegar entre as páginas
+        function changePage(direction) {
+            if (direction === 'next') {
+                currentPage++;
+            } else if (direction === 'prev') {
+                currentPage--;
+            }
+            loadPage(currentPage); // Recarrega a página com os clientes
+        }
+
+        // Chama a função para carregar os clientes ao carregar a página
+        document.addEventListener('DOMContentLoaded', carregarClientes);
     </script>
 </body>
 </html>
